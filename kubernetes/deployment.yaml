@@ -10,7 +10,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: python-app
+      app.kubernetes.io/name: python-app
   strategy:
     rollingUpdate:
       maxSurge: 100%
