@@ -9,7 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -34,16 +33,16 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ${{ vars.REGISTRY_HOST }}
-          username: ${{ vars.REGISTRY_USERNAME }}
+          registry: ${{ secrets.REGISTRY_HOST }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: Containerfile-alpine
-          tags: ${{ vars.REGISTRY_HOST }}/workshop-roma/python-app:${{ env.COMMIT_SHORT_SHA }}
+          file: Containerfile
+          tags: ${{ secrets.REGISTRY_HOST }}/workshop-roma/python-app:${{ env.COMMIT_SHORT_SHA }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
           provenance: false
@@ -52,3 +51,34 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache          
+  
+  deploy:
+    name: Deploy
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set the Kubernetes context
+        uses: azure/k8s-set-context@v4
+        with:
+          method: service-account
+          k8s-url: https://api.demo.k8s.cloudnative.demoreevo.it
+          k8s-secret: ${{ secrets.ROBOT_KUBETOKEN }}
+
+      - uses: actions/checkout@v4
+
+      - name: Set COMMIT_SHORT_SHA in ENV
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
+      - name: Deploy to the Kubernetes cluster
+        uses: azure/k8s-deploy@v5
+        with:
+          namespace: workshop-roma
+          manifests: |
+            kubernetes/deployment.yaml
+            kubernetes/ingress.yaml
+            kubernetes/service.yaml
+          images: |
+            harbor.demo.k8s.cloudnative.demoreevo.it/workshop-roma/python-app:${{ env.COMMIT_SHORT_SHA }}

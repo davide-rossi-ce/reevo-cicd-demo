@@ -22,6 +22,11 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-type", "application/json")
         self.end_headers()
         self.wfile.write(bytes('{"name":" IL TUO NOME "}'))
+      case "/healthz":
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        self.wfile.write(bytes('{"status":"OK!"}'))
       case _:
         self.send_response(404)
     return
