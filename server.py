@@ -10,16 +10,20 @@ serverPort = 8000
 
 class Handler(BaseHTTPRequestHandler):
   def do_GET(self):
-    # curl http://<ServerIP>/index.html
-    if self.path == "/":
-      # Respond with the file contents.
-      self.send_response(200)
-      self.send_header("Content-type", "text/html")
-      self.end_headers()
-      content = open('index.html', 'rb').read()
-      self.wfile.write(content)
-    else:
-      self.send_response(404)
+    match self.path:
+      case "/":
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        content = open('index.html', 'rb').read()
+        self.wfile.write(content)
+      case "/developer-name":
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        self.wfile.write(bytes('{"name":" IL TUO NOME "}'))
+      case _:
+        self.send_response(404)
     return
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
