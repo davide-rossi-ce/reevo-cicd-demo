@@ -1,4 +1,4 @@
-FROM python:bookworm
+FROM python:slim-bullseye
 ADD index.html index.html
 ADD server.py server.py
 EXPOSE 8000
