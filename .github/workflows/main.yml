@@ -60,9 +60,12 @@ jobs:
       - name: Set the Kubernetes context
         uses: azure/k8s-set-context@v4
         with:
-          method: service-account
-          k8s-url: https://api.demo.k8s.cloudnative.demoreevo.it
-          k8s-secret: ${{ secrets.ROBOT_KUBETOKEN }}
+          # method: service-account
+          # k8s-url: https://api.demo.k8s.cloudnative.demoreevo.it
+          # k8s-secret: ${{ secrets.ROBOT_KUBETOKEN }}
+          method: kubeconfig
+          kubeconfig: ${{ secrets.ROBOT_KUBECONFIG }}
+          k8s-secret: github-robot@demo
 
       - uses: actions/checkout@v4
 
