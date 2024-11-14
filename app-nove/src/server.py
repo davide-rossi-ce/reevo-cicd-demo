@@ -8,6 +8,7 @@ from socketserver import ThreadingMixIn
 hostName = "0.0.0.0"
 serverPort = int(os.environ.get('SERVER_PORT', '8000'))
 developerName = os.environ.get('DEVELOPER_NAME', "Davide")
+podName = os.environ.get('POD_NAME', "Nome Pod non trovato")
 status = { "code": 200, "healthy": "OK"}
 
 
@@ -70,6 +71,13 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(content).encode())
         for i in range(0,10000000):
           a = math.sqrt(64*64*64*64*64)
+      case "/pod-name":
+        self.send_response(200)
+        self.send_header("Content-type", "application/json")
+        self.end_headers()
+        content = {}
+        content['podName'] = podName
+        self.wfile.write(json.dumps(content).encode())
       case _:
         self.send_response(404)
     return

@@ -50,6 +50,10 @@ spec:
             value: {{ .Values.serverPort | quote }}
           - name: DEVELOPER_NAME
             value: {{ .Values.developerName | quote }}
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

@@ -2,6 +2,7 @@ function init(){
 	document.getElementById("retrieveName").onclick = loadName;
 	document.getElementById("breakPod").onclick = breakPod;
 	document.getElementById("generateLoad").onclick = generateLoad;
+	document.getElementById("retrievePod").onclick = loadPod;
 }
 
 function loadName(){
@@ -11,11 +12,26 @@ function loadName(){
 		if (this.readyState == 4 && this.status == 200) {
 			let responseObject = JSON.parse(xhttp.responseText);
 			developerName = responseObject.developerName;
-			render();
+			renderName();
 		}
 	};
 
 	xhttp.open("GET", "developer-name", true);
+	xhttp.send();
+}
+
+function loadPod(){
+	let xhttp = new XMLHttpRequest();
+
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			let responseObject = JSON.parse(xhttp.responseText);
+			podName = responseObject.podName;
+			renderPod();
+		}
+	};
+
+	xhttp.open("GET", "pod-name", true);
 	xhttp.send();
 }
 
@@ -34,7 +50,7 @@ function generateLoad(){
 	setTimeout(generateLoad, 5000)
 }
 
-function render(){
+function renderName(){
 	let content = "";
     content += `
         <div>
@@ -42,4 +58,14 @@ function render(){
         </div>
     `
 	document.getElementById("NameDiv").innerHTML = content;
+}
+
+function renderPod(){
+	let content = "";
+    content += `
+        <div>
+            <p> Ti ha risposto il Pod  ${podName} !!</p>
+        </div>
+    `
+	document.getElementById("PodDiv").innerHTML = content;
 }
