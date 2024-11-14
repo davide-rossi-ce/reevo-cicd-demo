@@ -45,7 +45,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: Containerfile
+          file: ./app-uno/Containerfile
           context: ./app-uno
           tags: ${{ secrets.REGISTRY_HOST }}/workshop-roma/python-app:${{ env.COMMIT_SHORT_SHA }}
           cache-from: type=local,src=/tmp/.buildx-cache
