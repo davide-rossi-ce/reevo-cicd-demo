@@ -5,9 +5,9 @@ on:
     branches:
       - "main"
     paths:
-      - "app-uno/*"
-      - ".github/*"
-      - "python-chart/*"
+      - "app-uno/**"
+      - ".github/**"
+      - "python-chart/**"
 
 jobs:
   build:
