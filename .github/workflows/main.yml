@@ -81,5 +81,6 @@ jobs:
 
       - name: Deploy to the Kubernetes cluster
         run: |
-          release-name=$(cat release-values.yaml| grep appName | sed -E "s/appName: +//g")
-          helm -n workshop-roma upgrade --install --atomic --cleanup-on-fail -f release-values.yaml --set image.tag=${{ env.COMMIT_SHORT_SHA }} ${release-name} python-chart
+          releaseName=$(cat release-values.yaml| grep appName | sed -E "s/appName: +//g")
+          echo "RELEASE_NAME=$releaseName" >> $GITHUB_ENV
+          helm -n workshop-roma upgrade --install --atomic --cleanup-on-fail -f release-values.yaml --set image.tag=${{ env.COMMIT_SHORT_SHA }} ${{ env.RELEASE_NAME }} python-chart
