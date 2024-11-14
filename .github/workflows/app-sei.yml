@@ -1,0 +1,90 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "app-sei/**"
+      - ".github/**"
+      - "python-chart/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set COMMIT_SHORT_SHA in ENV
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-  
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY_HOST }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          file: ./app-sei/Containerfile
+          context: ./app-sei
+          tags: ${{ secrets.REGISTRY_HOST }}/workshop-roma/python-app:${{ env.COMMIT_SHORT_SHA }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+          provenance: false
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache          
+  
+  deploy:
+    needs: build
+    name: Deploy
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set the Kubernetes context
+        uses: azure/k8s-set-context@v4
+        with:
+          # method: service-account
+          # k8s-url: https://api.demo.k8s.cloudnative.demoreevo.it
+          # k8s-secret: ${{ secrets.ROBOT_KUBETOKEN }}
+          method: kubeconfig
+          kubeconfig: ${{ secrets.ROBOT_KUBECONFIG }}
+          k8s-secret: github-robot@demo
+
+      - uses: actions/checkout@v4
+
+      - name: Set COMMIT_SHORT_SHA in ENV
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
+      - name: install helm
+        uses: azure/setup-helm@v4.2.0
+        id: install
+
+      - name: Deploy to the Kubernetes cluster
+        run: |
+          helm -n workshop-roma upgrade --install --atomic --timeout 2m --cleanup-on-fail -f app-sei/release-values.yaml --set image.tag=${{ env.COMMIT_SHORT_SHA }} app-sei ./python-chart
