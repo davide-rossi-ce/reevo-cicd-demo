@@ -6,6 +6,8 @@ on:
       - "main"
     paths:
       - "app-uno/*"
+      - ".github/*"
+      - "python-chart/*"
 
 jobs:
   build:
