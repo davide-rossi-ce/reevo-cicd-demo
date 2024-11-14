@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "main"
+    paths:
+      - "app-uno/*"
 
 jobs:
   build:
@@ -41,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: Containerfile
+          context: ./app-uno
           tags: ${{ secrets.REGISTRY_HOST }}/workshop-roma/python-app:${{ env.COMMIT_SHORT_SHA }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
@@ -80,11 +82,6 @@ jobs:
         uses: azure/setup-helm@v4.2.0
         id: install
 
-      - name: Parse release-name
-        run: |
-          releaseName=$(cat release-values.yaml| grep appName | sed -E -e "s/appName: +//g" -e "s/ +#.*//g")
-          echo "RELEASE_NAME=$releaseName" >> $GITHUB_ENV
-
       - name: Deploy to the Kubernetes cluster
         run: |
-          helm -n workshop-roma upgrade --install --atomic --timeout 2m --cleanup-on-fail -f release-values.yaml --set image.tag=${{ env.COMMIT_SHORT_SHA }} ${{ env.RELEASE_NAME }} ./python-chart
+          helm -n workshop-roma upgrade --install --atomic --timeout 2m --cleanup-on-fail -f app1/release-values.yaml --set image.tag=${{ env.COMMIT_SHORT_SHA }} app-uno ./python-chart
