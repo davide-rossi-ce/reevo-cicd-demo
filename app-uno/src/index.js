@@ -31,6 +31,7 @@ function generateLoad(){
 
 	xhttp.open("GET", "load", true);
 	xhttp.send();
+	setTimeout(generateLoad, 4000)
 }
 
 function render(){
