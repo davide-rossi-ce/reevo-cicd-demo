@@ -75,13 +75,11 @@ jobs:
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
           echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
+      - name: install helm
+        uses: azure/setup-helm@v4.2.0
+        id: install
+
       - name: Deploy to the Kubernetes cluster
-        uses: azure/k8s-deploy@v5
-        with:
-          namespace: workshop-roma
-          manifests: |
-            kubernetes/deployment.yaml
-            kubernetes/ingress.yaml
-            kubernetes/service.yaml
-          images: |
-            harbor.demo.k8s.cloudnative.demoreevo.it/workshop-roma/python-app:${{ env.COMMIT_SHORT_SHA }}
+        run: |
+          release-name=$(cat release-values.yaml| grep appName | sed -E "s/appName: +//g")
+          helm -n workshop-roma upgrade --install --atomic --cleanup-on-fail -f release-values.yaml --set image.tag=${{ env.COMMIT_SHORT_SHA }} ${release-name} python-chart

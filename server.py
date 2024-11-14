@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
+import os
 import json
 from socketserver import ThreadingMixIn
-import threading
 
 hostName = "0.0.0.0"
-serverPort = 8000
+serverPort = int(os.environ.get('SERVER_PORT', '8000'))
+appName = os.environ.get('APP_NAME', "Applicazione Super")
 
 class Handler(BaseHTTPRequestHandler):
   def do_GET(self):
@@ -17,16 +17,38 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         content = open('index.html', 'rb').read()
         self.wfile.write(content)
-      case "/developer-name":
+      case "/index":
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        content = open('index.html', 'rb').read()
+        self.wfile.write(content)
+      case "/index.html":
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        content = open('index.html', 'rb').read()
+        self.wfile.write(content)
+      case "/index.js":
+        self.send_response(200)
+        self.send_header("Content-type", "text/javascript")
+        self.end_headers()
+        content = open('index.js', 'rb').read()
+        self.wfile.write(content)
+      case "/application-name":
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
-        self.wfile.write(bytes('{"name":" IL TUO NOME "}'))
+        content = {}
+        content['appName'] = appName
+        self.wfile.write(json.dumps(content).encode())
       case "/healthz":
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
-        self.wfile.write(bytes('{"status":"OK!"}'))
+        content = {}
+        content['status'] = 'OK'
+        self.wfile.write(json.dumps(content).encode())
       case _:
         self.send_response(404)
     return
