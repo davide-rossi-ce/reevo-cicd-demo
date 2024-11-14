@@ -6,7 +6,7 @@ from socketserver import ThreadingMixIn
 
 hostName = "0.0.0.0"
 serverPort = int(os.environ.get('SERVER_PORT', '8000'))
-appName = os.environ.get('APP_NAME', "Applicazione Super")
+developerName = os.environ.get('DEVELOPER_NAME', "Davide")
 
 class Handler(BaseHTTPRequestHandler):
   def do_GET(self):
@@ -35,12 +35,12 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         content = open('index.js', 'rb').read()
         self.wfile.write(content)
-      case "/application-name":
+      case "/developer-name":
         self.send_response(200)
         self.send_header("Content-type", "application/json")
         self.end_headers()
         content = {}
-        content['appName'] = appName
+        content['developerName'] = developerName
         self.wfile.write(json.dumps(content).encode())
       case "/healthz":
         self.send_response(200)

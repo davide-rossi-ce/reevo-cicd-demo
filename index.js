@@ -8,12 +8,12 @@ function loadName(){
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			let responseObject = JSON.parse(xhttp.responseText);
-			appName = responseObject.appName;
+			developerName = responseObject.developerName;
 			render();
 		}
 	};
 
-	xhttp.open("GET", "application-name", true);
+	xhttp.open("GET", "developer-name", true);
 	xhttp.send();
 }
 
@@ -21,7 +21,7 @@ function render(){
 	let content = "";
     content += `
         <div>
-            <p> Questo sito si chiama: ${appName} !!</p>
+            <p> Che grande Sviluppatore che sei  ${developerName} !!</p>
         </div>
     `
 	document.getElementById("NameDiv").innerHTML = content;

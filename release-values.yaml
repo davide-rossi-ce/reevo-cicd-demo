@@ -1,2 +1,3 @@
-appName: python-webserver
-serverPort: 7000
+appName: python-webserver # CHANGEME! lettere minuscole e trattini, no spazi!!
+developerName: "Davide"   # Il tuo nome! o di qualcuno che ti è simpatico
+serverPort: 7000          # A piacere > 1000

@@ -48,8 +48,8 @@ spec:
           env:
           - name: SERVER_PORT
             value: {{ .Values.serverPort | quote }}
-          - name: APP_NAME
-            value: {{ .Values.appName | quote }}
+          - name: DEVELOPER_NAME
+            value: {{ .Values.developerName | quote }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
