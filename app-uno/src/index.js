@@ -1,5 +1,7 @@
 function init(){
 	document.getElementById("retrieveName").onclick = loadName;
+	document.getElementById("breakPod").onclick = breakPod;
+	document.getElementById("generateLoad").onclick = generateLoad;
 }
 
 function loadName(){
@@ -14,6 +16,20 @@ function loadName(){
 	};
 
 	xhttp.open("GET", "developer-name", true);
+	xhttp.send();
+}
+
+function breakPod(){
+	let xhttp = new XMLHttpRequest();
+
+	xhttp.open("GET", "break", true);
+	xhttp.send();
+}
+
+function generateLoad(){
+	let xhttp = new XMLHttpRequest();
+
+	xhttp.open("GET", "load", true);
 	xhttp.send();
 }
 
