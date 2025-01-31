@@ -21,11 +21,11 @@ Di seguito dei link interessanti:
 |------------------|-------------------------------------------------------------------|----------------------------------------------------|
 | Forecastle       | https://directory.demo.k8s.cloudnative.demoreevo.it               |                                                    |
 | Grafana          | https://grafana.demo.k8s.cloudnative.demoreevo.it                 | Per consultare Log, Metriche, Tracing              |
-| Kube-Dashboard   | https://dashboard.demo.k8s.cloudnative.demoreevo.it               | Scrivi Namespace: "workshop-roma"                  |
+| Kube-Dashboard   | https://dashboard.demo.k8s.cloudnative.demoreevo.it               | Scrivi Namespace: "workshop"                  |
 | Alertmanager     | https://alertmanager.demo.k8s.cloudnative.demoreevo.it            |                                                    |
 | SKD UI           | https://platform.demo.k8s.cloudnative.demoreevo.it                |                                                    |
 | Hubble           | https://hubble.demo.k8s.cloudnative.demoreevo.it                  | Seleziona Namespace: "online-boutique              |
 | Harbor           | https://harbor.demo.k8s.cloudnative.demoreevo.it                  |                                                    |
 | Online-Boutique  | https://app.demo.k8s.cloudnative.demoreevo.it                     | Applicazione distribuita di esempio                |
 | Gangplank        | https://gangplank.demo.k8s.cloudnative.demoreevo.it               | Per scaricare il kubeconfig se hai kubectl         |
-| La tua APP!      | https://<appName>.demo.k8s.cloudnative.demoreevo.it               | Apri PR, qualche secondo e la tua app sara qui!    |
+| La tua APP!      | https://<$appName>.demo.k8s.cloudnative.demoreevo.it               | Apri PR, qualche secondo e la tua app sara qui!    |
