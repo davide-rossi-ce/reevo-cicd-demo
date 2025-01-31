@@ -5,7 +5,7 @@
 replicaCount: 2
 
 image:
-  repository: harbor.demo.k8s.cloudnative.demoreevo.it/workshop-milano/python-app
+  repository: harbor.demo.k8s.cloudnative.demoreevo.it/workshop/python-app
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
