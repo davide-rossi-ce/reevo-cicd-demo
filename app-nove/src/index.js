@@ -46,8 +46,8 @@ function generateLoad(){
 	let xhttp = new XMLHttpRequest();
 
 	xhttp.open("GET", "load", true);
+	setTimeout(generateLoad, 5000);
 	xhttp.send();
-	setTimeout(generateLoad, 5000)
 }
 
 function renderName(){
